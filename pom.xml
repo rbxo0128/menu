@@ -30,6 +30,11 @@
             <artifactId>google-genai</artifactId>
             <version>0.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.sparkjava</groupId>
+            <artifactId>spark-core</artifactId>
+            <version>2.9.3</version>
+        </dependency>
     </dependencies>
 
     <build>

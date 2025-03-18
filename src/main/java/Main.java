@@ -2,6 +2,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import static spark.Spark.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -14,5 +15,10 @@ public class Main {
                 .setActivity(Activity.playing("자바 디스코드 봇!"))
                 .addEventListeners(new BotReadyListener() ,new MessageListener(), new SlashCommandListener())
                 .build();
+
+        port(8080);
+        get("/", (req, res) -> "Bot is running!");
+
+        System.out.println("HTTP server running on port 8080 to keep Render alive.");
     }
 }
