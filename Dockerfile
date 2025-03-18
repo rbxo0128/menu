@@ -2,22 +2,23 @@ FROM maven:3.8.5-openjdk-17 AS builder
 
 WORKDIR /app
 
-# 프로젝트 의존성 미리 다운로드하여 캐시 활용
-COPY pom.xml ./
-RUN mvn dependency:resolve
+# 모든 프로젝트 파일 복사
+COPY . .
 
-# 소스 코드 복사 및 빌드
-COPY src ./src
-# 메인 클래스를 지정하여 매니페스트에 추가하는 플러그인 설정으로 빌드
-RUN mvn clean package -DskipTests -Dexec.mainClass="Main"
+# shade 플러그인을 사용하여 의존성이 포함된 uber-jar 빌드
+RUN mvn clean package -DskipTests
 
-# 2. 런타임 스테이지 (경량 OpenJDK 사용)
+# 2. 런타임 스테이지
 FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
-# 빌드된 JAR 파일 복사
-COPY --from=builder /app/target/*.jar bot.jar
+# 빌드된 fat/uber JAR 파일 복사
+COPY --from=builder /app/target/*-SNAPSHOT.jar app.jar
 
-# 컨테이너 실행 시 JAR 실행 - 메인 클래스 명시적 지정
-CMD ["java", "-jar", "bot.jar", "Main"]
+# 환경 변수 설정 - Render에서 설정한 환경변수 사용
+ENV TOKEN=${TOKEN}
+ENV GEMINI_KEY=${GEMINI_KEY}
+
+# 컨테이너 실행 시 JAR 실행
+CMD ["java", "-jar", "app.jar"]
