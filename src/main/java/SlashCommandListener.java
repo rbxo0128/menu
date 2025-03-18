@@ -84,9 +84,9 @@ public class SlashCommandListener extends ListenerAdapter {
         if (event.getName().equals("메뉴추천")) {
             String prompt = event.getOption("prompt") != null ? event.getOption("prompt").getAsString() : "";
             String meal = event.getOption("meal") != null ? event.getOption("meal").getAsString() : "무관";
-            String cuisine = event.getOption("cuisine") != null ? event.getOption("cuisine").getAsString() : "무관";
+            String category = event.getOption("category") != null ? event.getOption("category").getAsString() : "무관";
             
-            String fullPrompt = String.format("끼니: %s, 음식 종류: %s, 추가설명: %s 인 메뉴를 추천해주세요.", meal, cuisine, prompt);
+            String fullPrompt = String.format("끼니: %s, 음식 종류: %s, 추가설명: %s 이 설명을 듣고 적당한 메뉴를 추천해주세요.", meal, category, prompt);
             String result = answerQuestion(fullPrompt);
 
             event.reply(result).queue();
